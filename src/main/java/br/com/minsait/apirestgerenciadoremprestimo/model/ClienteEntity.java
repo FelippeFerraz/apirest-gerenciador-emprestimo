@@ -27,10 +27,10 @@ public class ClienteEntity {
 
     public ClienteEntity(String nome, String cpf, Endereco endereco, BigDecimal rendimentoMensal){
 
+        this.rendimentoMensal = rendimentoMensal;
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
-        this.rendimentoMensal = rendimentoMensal;
 
     }
 }
