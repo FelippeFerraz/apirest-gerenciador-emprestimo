@@ -1,5 +1,6 @@
 package br.com.minsait.apirestgerenciadoremprestimo.model;
 
+import br.com.minsait.apirestgerenciadoremprestimo.dto.ClienteDto;
 import br.com.minsait.apirestgerenciadoremprestimo.enuns.NivelRelacionamento;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,12 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 public class ClienteEntity {
+
+    @Id
+    private String cpf;
     @Column(name = "NOME")
     private String nome;
-    @Id
-    @Column(name = "CPF")
-    private String cpf;
+
     @Embedded
     private Endereco endereco;
     @Column(name = "RENDIMENTO_MENSAL")
@@ -25,12 +27,12 @@ public class ClienteEntity {
     @Enumerated(EnumType.STRING)
     private NivelRelacionamento relacionamento;
 
-    public ClienteEntity(String nome, String cpf, Endereco endereco, BigDecimal rendimentoMensal){
+    public ClienteEntity(ClienteDto dto){
 
-        this.rendimentoMensal = rendimentoMensal;
-        this.nome = nome;
-        this.cpf = cpf;
-        this.endereco = endereco;
-
+        this.nome = dto.nome();
+        this.cpf =dto.cpf();
+        this.endereco = dto.endereco();
+        this.rendimentoMensal = dto.rendimentoMensal();
+        this.relacionamento = dto.relacionamento();
     }
 }
