@@ -1,6 +1,9 @@
 package br.com.minsait.apirestgerenciadoremprestimo.service;
 
-import br.com.minsait.apirestgerenciadoremprestimo.dto.ClienteDto;
+import br.com.minsait.apirestgerenciadoremprestimo.dto.ClienteSaveDto;
+import br.com.minsait.apirestgerenciadoremprestimo.dto.ClienteUpdateDto;
+import br.com.minsait.apirestgerenciadoremprestimo.exceptions.BadRequestException;
+import br.com.minsait.apirestgerenciadoremprestimo.exceptions.NotFoundException;
 import br.com.minsait.apirestgerenciadoremprestimo.model.ClienteEntity;
 import br.com.minsait.apirestgerenciadoremprestimo.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,17 +18,42 @@ public class ClienteService {
     @Autowired
     private ClienteRepository repository;
 
-    public ResponseEntity<?>salvar(ClienteDto dto){
+    public List<ClienteEntity> listar() {
+        List<ClienteEntity> clientes = repository.findAll();
+        if(clientes.isEmpty()) {
+            throw new NotFoundException("Nenhum cliente encontrado!");
+        }
+        return clientes;
+    }
+
+    public ClienteEntity listarPeloId(String cpf) {
+        ClienteEntity cliente = repository.findByCpf(cpf).orElseThrow(() -> {
+            throw new NotFoundException("Nenhum cliente cadastrado com o CPF: " + cpf);
+        });
+        return cliente;
+    }
+
+    public void salvar(ClienteSaveDto dto){
         if (repository.existsByCpf(dto.cpf())){
-            return ResponseEntity.badRequest().body("CPF já exstente");
+            throw new BadRequestException("CPF já exstente");
         }
         ClienteEntity cliente = new ClienteEntity(dto);
         repository.save(cliente);
-        return ResponseEntity.ok().body(cliente);
     }
 
-    public ResponseEntity<?>listar(){
-        List<ClienteEntity> clientes = repository.findAll();
-        return  ResponseEntity.ok().body(clientes);
+    public void atualizar(String cpf, ClienteUpdateDto dto){
+        ClienteEntity cliente = repository.findByCpf(cpf).orElseThrow(() -> {
+            throw new NotFoundException("Nenhum cliente cadastrado com o CPF: " + cpf);
+        });
+        cliente.update(dto);
+        repository.save(cliente);
     }
+
+    public void deletar(String cpf) {
+        ClienteEntity cliente = repository.findByCpf(cpf).orElseThrow(() -> {
+            throw new NotFoundException("Nenhum cliente cadastrado com o CPF: " + cpf);
+        });
+        repository.delete(cliente);
+    }
+
 }

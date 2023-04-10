@@ -1,6 +1,7 @@
 package br.com.minsait.apirestgerenciadoremprestimo.model;
 
-import br.com.minsait.apirestgerenciadoremprestimo.dto.ClienteDto;
+import br.com.minsait.apirestgerenciadoremprestimo.dto.ClienteSaveDto;
+import br.com.minsait.apirestgerenciadoremprestimo.dto.ClienteUpdateDto;
 import br.com.minsait.apirestgerenciadoremprestimo.enuns.NivelRelacionamento;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "TB_CLIENTES")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,26 +20,33 @@ public class ClienteEntity {
 
     @Id
     private String cpf;
+
     @Column(name = "NOME")
     private String nome;
 
-
     @Embedded
     private Endereco endereco;
+
     @Column(name = "RENDIMENTO_MENSAL")
-    private BigDecimal rendimentoMensal;
+    private BigDecimal rendimentoMensal = new BigDecimal(0);
+
     @Column(name = "NIVEL_RELACIONAMENTO")
     @Enumerated(EnumType.STRING)
     private NivelRelacionamento relacionamento;
 
-
-    public ClienteEntity(ClienteDto dto){
-
+    public ClienteEntity(ClienteSaveDto dto){
         this.nome = dto.nome();
-        this.cpf =dto.cpf();
+        this.cpf = dto.cpf();
         this.endereco = dto.endereco();
         this.rendimentoMensal = dto.rendimentoMensal();
         this.relacionamento = dto.relacionamento();
-
     }
+
+    public void update(ClienteUpdateDto dto) {
+        this.nome = dto.nome();
+        this.endereco = dto.endereco();
+        this.rendimentoMensal = dto.rendimentoMensal();
+        this.relacionamento = dto.relacionamento();
+    }
+
 }
