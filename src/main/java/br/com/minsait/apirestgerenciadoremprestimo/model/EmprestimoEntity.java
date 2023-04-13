@@ -1,14 +1,12 @@
 package br.com.minsait.apirestgerenciadoremprestimo.model;
 
 import br.com.minsait.apirestgerenciadoremprestimo.dto.EmprestimoSaveDto;
-import br.com.minsait.apirestgerenciadoremprestimo.enuns.NivelRelacionamento;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 @Table(name = "TB_EMPRESTIMOS")
@@ -38,7 +36,6 @@ public class EmprestimoEntity {
 
     public EmprestimoEntity(EmprestimoSaveDto dto) {
         this.valorInicial = dto.valorInicial();
-        this.valorFinal = dto.valorFinal();
         this.dataInicial = dto.dataInicial();
         this.dataFinal = dto.dataFinal();
     }

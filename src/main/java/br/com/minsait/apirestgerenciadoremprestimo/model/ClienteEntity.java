@@ -24,6 +24,9 @@ public class ClienteEntity {
     @Column(name = "NOME")
     private String nome;
 
+    @Column(name = "TELEFONE")
+    private String telefone;
+
     @Embedded
     private Endereco endereco;
 
@@ -34,12 +37,13 @@ public class ClienteEntity {
     @Enumerated(EnumType.STRING)
     private NivelRelacionamento relacionamento;
 
-    public ClienteEntity(ClienteSaveDto dto){
+    public ClienteEntity(ClienteSaveDto dto) {
         this.nome = dto.nome();
         this.cpf = dto.cpf();
         this.endereco = dto.endereco();
         this.rendimentoMensal = dto.rendimentoMensal();
         this.relacionamento = dto.relacionamento();
+        this.telefone = dto.telefone();
     }
 
     public void update(ClienteUpdateDto dto) {
@@ -47,6 +51,7 @@ public class ClienteEntity {
         this.endereco = dto.endereco();
         this.rendimentoMensal = dto.rendimentoMensal();
         this.relacionamento = dto.relacionamento();
+        this.telefone = dto.telefone();
     }
 
 }
