@@ -1,6 +1,5 @@
 package br.com.minsait.apirestgerenciadoremprestimo.service;
 
-
 import br.com.minsait.apirestgerenciadoremprestimo.dto.EmprestimoSaveDto;
 import br.com.minsait.apirestgerenciadoremprestimo.enuns.NivelRelacionamento;
 import br.com.minsait.apirestgerenciadoremprestimo.exceptions.BadRequestException;
@@ -23,7 +22,6 @@ public class EmprestimoService {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
 
     public List<EmprestimoEntity> listar(String cpf) {
         List<EmprestimoEntity> emprestimos = emprestimoRepository.findAllByCpfCliente(cpf);
@@ -61,10 +59,6 @@ public class EmprestimoService {
 
     public BigDecimal calcularValorFinal(NivelRelacionamento nivelRelacionamento, BigDecimal valorInicial, int totalEmprestimos) {
 
-        if(totalEmprestimos < 1){
-            throw new IllegalArgumentException("O cliente não possui empréstimos");
-        }
-
         if (nivelRelacionamento.equals(NivelRelacionamento.BRONZE)) {
             return BigDecimal.valueOf(valorInicial.doubleValue() * 1.8);
         } else if (nivelRelacionamento.equals(NivelRelacionamento.PRATA)) {
@@ -73,7 +67,7 @@ public class EmprestimoService {
             }
             return BigDecimal.valueOf(valorInicial.doubleValue() * 1.6);
         } else if (nivelRelacionamento.equals(NivelRelacionamento.OURO)) {
-            if (totalEmprestimos == 1) {
+            if (totalEmprestimos == 0 || totalEmprestimos == 1) {
                 return BigDecimal.valueOf(valorInicial.doubleValue() * 1.2);
             }
             return BigDecimal.valueOf(valorInicial.doubleValue() * 1.3);
@@ -86,5 +80,4 @@ public class EmprestimoService {
         EmprestimoEntity emprestimo = emprestimoRepository.findByCpfClienteAndId(cpf, id).orElseThrow(() -> new NotFoundException("Emprestimo não encontrado"));
         emprestimoRepository.delete(emprestimo);
     }
-
 }
